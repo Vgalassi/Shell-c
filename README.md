@@ -1,4 +1,4 @@
-**Repositório GitHub: Shell - Interpretador de Comandos em C**
+**Shell - Interpretador de Comandos em C**
 
 Este repositório contém o código fonte para um interpretador de comandos em linguagem C, também conhecido como shell. O shell é capaz de receber comandos interativamente via terminal ou de um arquivo batch, interpretar cada comando e decidir entre comandos internos (built-in) ou programas externos, executando-os em novos processos filhos.
 
