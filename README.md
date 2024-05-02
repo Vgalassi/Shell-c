@@ -25,7 +25,7 @@ Desenvolver uma aplicação Shell - interpretador de comandos em C.
 **Condições de erro:**
 O shell trata condições de erro e imprime mensagens amigáveis para elas.
 
-** Outras funcionalidades:**
+**Outras funcionalidades:**
 1. Clone do `cat`: Lê o conteúdo do arquivo no argumento e o escreve na saída padrão.
 2. Clone do `ls`: Lista o conteúdo do diretório atual, suportando os parâmetros `-l` e `-a`.
 3. Redirecionamento de saída: A saída dos comandos pode ser redirecionada para um arquivo.
