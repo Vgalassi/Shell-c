@@ -13,9 +13,9 @@ Desenvolver uma aplicação Shell - interpretador de comandos em C.
 **Funcionalidade básica:**
 - Receber comandos e interpretá-los em um laço infinito.
 - Comandos internos (built-in):
-  1. `exit`: Finaliza o Shell.
-  2. `cd <caminho>`: Muda o diretório de trabalho.
-  3. `path <caminho> [<caminho> <caminho> ...]`: Define caminho(s) para busca de executáveis.
+  - `exit`: Finaliza o Shell.
+  - `cd <caminho>`: Muda o diretório de trabalho.
+  - `path <caminho> [<caminho> <caminho> ...]`: Define caminho(s) para busca de executáveis.
 - Programas externos:
   - O shell procura por executáveis nos caminhos definidos com o built-in `path`.
   - Executa o programa em um novo processo, passando os argumentos solicitados pelo usuário.
