@@ -36,4 +36,4 @@ O shell trata condições de erro e imprime mensagens amigáveis para elas.
 - Não é preciso se preocupar com caracteres de escape ou argumentos com espaços entre aspas.
 
 **Repositório de Referência:**
-- [Link para o Repositório no GitHub](https://github.com/seu-usuario/shell-interpreter)
+- [Link para o Repositório no GitHub](https://github.com/Mttue7/shell-interpreter)
