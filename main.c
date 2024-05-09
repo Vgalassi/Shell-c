@@ -44,6 +44,7 @@ int main(){
     while(1){
         fgets(comando,100,stdin);
         enderecosComando = refatorarComando(comando);
+
         if(strcmp(comando,"exit") == 0){
             printf("\nTerminou o BobShell\n");
             return 0;
