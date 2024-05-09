@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
+
 
 
 
@@ -16,7 +18,16 @@ int main(){
         if(strcmp(comando,"exit") == 0){
             printf("\nTerminou o BobShell\n");
             return 0;
+        }else if(1) {  
+            if (chdir(comando) == 0) {
+            printf("Mudou para o diretório %s\n",comando);
+            } else {
+                perror("chdir");
+            }
+        
         }
+
+        
         else{
             printf("%s não é reconhecido como comando interno\n",comando);
         }
