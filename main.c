@@ -3,7 +3,7 @@
 #include <string.h>
 
 
-char** refatorarComando(char comando[]){
+char** separarComando(char comando[]){
 
     int i = 0;
     int numeroEnderecos = 0;
@@ -26,7 +26,7 @@ char** refatorarComando(char comando[]){
         j++;
 
     }
-    printf("\n\n%c\n\n",*enderecosComando[0]);
+
     return enderecosComando;
 }
 
@@ -43,9 +43,13 @@ int main(){
     
     while(1){
         fgets(comando,100,stdin);
-        enderecosComando = refatorarComando(comando);
+        comando[strcspn(comando, "\n")] = 0;
+        enderecosComando = separarComando(comando);
 
-        if(strcmp(comando,"exit") == 0){
+
+
+
+        if(strcmp(enderecosComando[0],"exit") == 0){
             printf("\nTerminou o BobShell\n");
             return 0;
         }
