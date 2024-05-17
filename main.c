@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <sys/wait.h> // adicione esta linha no início do seu programa
+
 
 char** separarComando(char comando[],int *numeroEnderecos){
     int i = 0;
@@ -101,24 +103,26 @@ int main(){
                 pathTamanho = i;
             }
         } else if(strcmp(enderecosComando[enderecoAtual],"cat") == 0){
-            enderecoAtual++;
-            FILE *file;
-            int c;
-            if(enderecoAtual >= numeroEnderecos) {
-                printf("Por favor, forneça o nome do arquivo como argumento.\n");
-            } else {
-                file = fopen(enderecosComando[enderecoAtual], "r");
-                if(file == NULL) {
-                    printf("Não foi possível abrir o arquivo %s\n", enderecosComando[enderecoAtual]);
-                } else {
-                    while((c = fgetc(file)) != EOF) {
-                        putchar(c);
-                    }
-                    fclose(file);
-                }
-            }
-        } else if(strcmp(enderecosComando[0],"clear") == 0){
-            system("cls");
+    enderecoAtual++;
+    pid_t pid = fork(); // cria um novo processo
+    if (pid == -1) {
+        perror("fork");
+    } else if (pid == 0) {
+        char *argv[] = {"./cat", enderecosComando[enderecoAtual], NULL}; // argumentos para o programa cat
+        execvp(argv[0], argv); // executa o programa cat no novo processo
+        perror("execvp"); // execvp retorna apenas se ocorrer um erro
+        exit(EXIT_FAILURE);
+    } else {
+        int status;
+        waitpid(pid, &status, 0); // espera o processo filho terminar
+        if (WIFEXITED(status) && WEXITSTATUS(status) != 0) {
+            fprintf(stderr, "O programa cat terminou com um erro.\n");
+        }
+    }
+}
+ else if(strcmp(enderecosComando[0],"clear") == 0){
+            system("clear");
+
         } else if(strcmp(enderecosComando[0],"exit") == 0){
             printf("\nTerminou o BobShell\n");
             return 0;
