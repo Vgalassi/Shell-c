@@ -1,0 +1,14 @@
+.
+..
+.git
+.gitignore
+cat.c
+LICENSE
+ls
+ls.c
+main
+main.c
+main.o
+README.md
+teste
+teste.txt
