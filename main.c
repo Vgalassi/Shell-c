@@ -32,7 +32,6 @@ char** separarComando(char comando[], int *numeroEnderecos) {
         }
         j++;
     }
-
     printf("comando inteiro:");
     for (i = 0; i < (*numeroEnderecos); i++) {
         printf("%s ", enderecosComando[i]);
@@ -106,7 +105,8 @@ int main(int argc, char *argv[]) {
             enderecoAtual++;
             if (chdir(enderecosComando[enderecoAtual]) == 0) {
                 getcwd(diretorio, sizeof(diretorio));
-            } else {
+            } 
+            else {
                 perror("chdir");
             }
         } else if (strcmp(enderecosComando[0], "ls") == 0) {
@@ -133,15 +133,36 @@ int main(int argc, char *argv[]) {
                     free(path[i]);
                 }
                 free(path);
+                } 
+                free(path);
                 pathTamanho = 0;
                 path = malloc((numeroPalavras - 1) * sizeof(char*));
                 for (i = 0; i < (numeroPalavras - 1); i++) {
                     path[i] = malloc(256 * sizeof(char));
-                    strncpy(path[i], enderecosComando[enderecoAtual + i], 255);
+                    strncpy(path[i],enderecosComando[enderecoAtual + i],255);
+                    
                 }
                 pathTamanho = i;
+        } else if(strcmp(enderecosComando[enderecoAtual],"cat") == 0){
+            enderecoAtual++;
+            FILE *file;
+            int c;
+            if(enderecoAtual >= numeroEnderecos) {
+                printf("Por favor, forneça o nome do arquivo como argumento.\n");
+            } else {
+                file = fopen(enderecosComando[enderecoAtual], "r");
+                if(file == NULL) {
+                    printf("Não foi possível abrir o arquivo %s\n", enderecosComando[enderecoAtual]);
+                } else {
+                    while((c = fgetc(file)) != EOF) {
+                        putchar(c);
+                    }
+                    fclose(file);
+                }
             }
-        } else if (strcmp(enderecosComando[0], "exit") == 0) {
+        } else if(strcmp(enderecosComando[0],"clear") == 0){
+            system("cls");
+        } else if(strcmp(enderecosComando[0],"exit") == 0){
             printf("\nTerminou o BobShell\n");
             free(path);
             if (argc == 2) {
