@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-
+#include <wait.h>
 
 
 char** separarComando(char comando[],int *numeroEnderecos){
@@ -72,9 +72,12 @@ int main(){
     int numeroPalavras;
     int enderecoAtual = 0;
     int i;
-    int pathTamanho = 0;
-    path = malloc(1 * sizeof(char*));
+    int pathTamanho = 1;
     
+    pid_t pid;
+    path = malloc(1 * sizeof(char*));
+    path[0] = malloc(256 * sizeof(char));
+    strcpy(path[0], "/usr/bin");
     
     while(1){
 
@@ -116,7 +119,6 @@ int main(){
             }else{
                 for(i = 0; i < pathTamanho; i++){
                     free(path[i]);
-                    
                 } 
                
                free(path);
@@ -135,9 +137,29 @@ int main(){
         }
         else if(strcmp(enderecosComando[0],"exit") == 0){
             printf("\nTerminou o BobShell\n");
+            free(path);
             return 0;
         }else{
-            printf("%s não é reconhecido como comando interno\n",enderecosComando[0]);
+            int numeroProcessos = 0;
+            char diretorioProcurado[256];
+    
+            for(i = 0;i<pathTamanho;i++){
+                snprintf(diretorioProcurado, sizeof(diretorioProcurado), "%s/%s", path[i], enderecosComando[0]);
+                printf("%s\n",diretorioProcurado);
+                if(access(diretorioProcurado, X_OK) == 0){
+                    pid = fork();
+                    if(pid == 0){
+                        execl(diretorioProcurado, enderecosComando[0] , NULL, NULL);
+                    }
+                    numeroProcessos++;
+                }
+            }
+            
+            for(i = 0; i<numeroProcessos;i++)
+                wait(NULL);
+            if(numeroProcessos == 0){
+                printf("%s não é reconhecido como comando interno\n",enderecosComando[0]);
+            }
         }
         free(enderecosComando);
 
@@ -145,6 +167,5 @@ int main(){
         enderecoAtual = 0;
         
     }
-
-    free(path);
+    
 }
