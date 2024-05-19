@@ -3,6 +3,8 @@
 #include <string.h>
 #include <unistd.h>
 #include <dirent.h>
+#include <fcntl.h>
+#include <wait.h>
 
 char** separarComando(char comando[], int *numeroEnderecos) {
     int i = 0;
@@ -52,6 +54,7 @@ int contaPalavras(char** enderecosComando, int numeroEnderecos) {
 
 int main(int argc, char *argv[]) {
     FILE *file;
+    pid_t pid;
     int stdin_backup; // Declarando stdin_backup aqui
 
     if (argc == 2) {
@@ -90,6 +93,10 @@ int main(int argc, char *argv[]) {
     int pathTamanho = 0;
     path = malloc(1 * sizeof(char*));
 
+    // Obtém o caminho absoluto do executável ls
+    char ls_path[512];
+    realpath("./ls", ls_path);
+
     while (1) {
         printf("\n%s>", diretorio);
         fgets(comando, 8191, stdin);
@@ -101,6 +108,39 @@ int main(int argc, char *argv[]) {
         printf("\nEndereço atual: %d\n", enderecoAtual);
         printf("\nNumero de palavras: %d\n", numeroPalavras);
 
+       // Verifica por redirecionamento de saída
+        int redirect_output = 0;
+        char *output_file = NULL;
+        for (i = 0; i < numeroEnderecos; i++) {
+            if (strcmp(enderecosComando[i], ">") == 0 && i + 1 < numeroEnderecos) {
+                redirect_output = 1;
+                output_file = enderecosComando[i + 1];
+                enderecosComando[i] = NULL; // Termina o comando antes do '>'
+                numeroEnderecos = i; // Ajusta o número de endereços para não incluir o redirecionamento
+                break;
+            }
+        }
+
+        int stdout_backup;
+        if (redirect_output) {
+            stdout_backup = dup(fileno(stdout));
+            int output_fd = open(output_file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+            if (output_fd == -1) {
+                perror("Erro ao abrir o arquivo de saída");
+                continue;
+            }
+            if (dup2(output_fd, fileno(stdout)) == -1) {
+                perror("Erro ao redirecionar stdout");
+                close(output_fd);
+                continue;
+            }
+            close(output_fd);
+        }
+
+        if (numeroEnderecos == 0) {
+            continue;  // No command to execute
+        }
+
         if (strcmp(enderecosComando[0], "cd") == 0) {
             enderecoAtual++;
             if (chdir(enderecosComando[enderecoAtual]) == 0) {
@@ -110,17 +150,35 @@ int main(int argc, char *argv[]) {
                 perror("chdir");
             }
         } else if (strcmp(enderecosComando[0], "ls") == 0) {
-            DIR *dir;
-            struct dirent *ent;
-            if ((dir = opendir(diretorio)) != NULL) {
-                while ((ent = readdir(dir)) != NULL) {
-                    printf("%s\n", ent->d_name);
-                }
-                closedir(dir);
-            } else {
-                perror("Erro ao abrir o diretório");
-            }
-        } else if (strcmp(enderecosComando[enderecoAtual], "path") == 0) {
+    pid = fork();
+    if (pid == 0) {
+        // Count the number of arguments to pass to execl
+        int arg_count = 1; // For "ls"
+
+        // Create an array to hold the arguments
+        char *args[numeroPalavras]; // +1 for NULL termination
+
+        // Set the first argument to "ls"
+        args[0] = enderecosComando[0];
+
+        // Copy the rest of the arguments
+        for (int i = 1; i < numeroPalavras; i++) {
+            args[i] = enderecosComando[i];
+        }
+
+        // Null-terminate the arguments array
+        args[numeroPalavras] = NULL;
+
+       // Executa o comando com os argumentos
+        execv(ls_path, args);
+
+        // If execv fails
+        perror("execv");
+        exit(EXIT_FAILURE);
+    }
+    wait(NULL);
+}
+else if (strcmp(enderecosComando[enderecoAtual], "path") == 0) {
             enderecoAtual++;
             if (numeroPalavras == (enderecoAtual)) {
                 printf("PATH = ");

@@ -73,8 +73,11 @@ int main(int argc, char *argv[]) {
             continue;
         }
 
+        char full_path[1024];
+        snprintf(full_path, sizeof(full_path), "%s/%s", dir_name, ent->d_name);
+
         if (long_format) {
-            if (stat(ent->d_name, &sb) == -1) {
+            if (stat(full_path, &sb) == -1) {
                 perror("stat");
                 continue;
             }
