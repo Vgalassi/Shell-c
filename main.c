@@ -6,6 +6,15 @@
 #include <fcntl.h>
 #include <wait.h>
 
+void clear_screen() {
+#ifdef _WIN32
+    system("cls");
+#else
+    system("clear");
+#endif
+}
+
+
 char** separarComando(char comando[], int *numeroEnderecos) {
     int i = 0;
     *numeroEnderecos = 1;
@@ -57,35 +66,12 @@ int main(int argc, char *argv[]) {
     pid_t pid;
     int stdin_backup; // Declarando stdin_backup aqui
 
-    if (argc == 2) {
-        file = fopen(argv[1], "r");
-        if (file == NULL) {
-            perror("Erro ao abrir o arquivo batch");
-            return 1;
-        }
-
-        // Salva a entrada padrão atual
-        stdin_backup = dup(fileno(stdin));
-        if (stdin_backup == -1) {
-            perror("Erro ao fazer backup do stdin");
-            fclose(file);
-            return 1;
-        }
-
-        // Redefine a entrada padrão para apontar para o arquivo batch
-        if (dup2(fileno(file), fileno(stdin)) == -1) {
-            perror("Erro ao redirecionar stdin");
-            fclose(file);
-            return 1;
-        }
-    }
-
     char comando[8191];
     char diretorio[256];
     char **path;
     int numeroEnderecos = 0;
     getcwd(diretorio, sizeof(diretorio));
-    printf("-- Bob shell --\n\n\n");
+    printf("-- Bob shell --\n");
     char** enderecosComando;
     int numeroPalavras;
     int enderecoAtual = 0;
@@ -218,8 +204,10 @@ else if (strcmp(enderecosComando[enderecoAtual], "path") == 0) {
                     fclose(file);
                 }
             }
-        } else if(strcmp(enderecosComando[0],"clear") == 0){
-            system("cls");
+        } else if (strcmp(enderecosComando[0], "clear") == 0) {
+            clear_screen();
+            printf("-- Bob shell --\n");
+    
         } else if(strcmp(enderecosComando[0],"exit") == 0){
             printf("\nTerminou o BobShell\n");
             free(path);
@@ -240,16 +228,6 @@ else if (strcmp(enderecosComando[enderecoAtual], "path") == 0) {
         free(enderecosComando);
         numeroPalavras = 0;
         enderecoAtual = 0;
-    }
-
-    if (argc == 2) {
-        // Restaura a entrada padrão
-        if (dup2(stdin_backup, fileno(stdin)) == -1) {
-            perror("Erro ao restaurar stdin");
-            fclose(file);
-            return 1;
-        }
-        fclose(file);
     }
 
     return 0;
