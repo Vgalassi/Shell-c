@@ -6,6 +6,15 @@
 #include <fcntl.h>
 #include <wait.h>
 
+
+
+void clear_screen() {
+    #ifdef _WIN32
+        system("cls");
+    #else
+        system("clear");
+    #endif
+}
 char** separarComando(char comando[], int *numeroEnderecos) {
     int i = 0;
     *numeroEnderecos = 1;
@@ -72,9 +81,13 @@ int main(int argc, char *argv[]) {
     realpath("./ls", ls_path);
     realpath("./cat", cat_path);
 
-    printf("-- Bob shell --\n\n\n");
+    printf("-- Bob shell --\n");
     while (1) {
-        printf("\n%s>", diretorio);
+        int redirect_output = 0;
+
+        if (!redirect_output) {
+            printf("\n%s> ", diretorio);
+        }
         fgets(comando, 8191, stdin);
         comando[strcspn(comando, "\n")] = 0;
         enderecosComando = separarComando(comando, &numeroEnderecos);
@@ -89,6 +102,38 @@ int main(int argc, char *argv[]) {
         }
 
         numeroPalavras = contaPalavras(&enderecosComando[enderecoAtual], numeroEnderecos - enderecoAtual);
+
+        char *output_file = NULL;
+        for (i = 0; i < numeroEnderecos; i++) {
+            if (strcmp(enderecosComando[i], ">") == 0 && i + 1 < numeroEnderecos) {
+                redirect_output = 1;
+                output_file = enderecosComando[i + 1];
+                enderecosComando[i] = NULL; // Termina o comando antes do '>'
+                numeroEnderecos = i; // Ajusta o número de endereços para não incluir o redirecionamento
+                 break;
+            }
+        
+        }
+
+        int stdout_backup;
+        if (redirect_output) {
+            stdout_backup = dup(fileno(stdout));
+            int output_fd = open(output_file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+            if (output_fd == -1) {
+                perror("Erro ao abrir o arquivo de saída");
+                continue;
+            }
+            if (dup2(output_fd, fileno(stdout)) == -1) {
+                perror("Erro ao redirecionar stdout");
+                close(output_fd);
+                continue;
+            }
+        }
+
+
+        if (numeroEnderecos == 0) {
+            continue;  
+        }
     
         if (strcmp(enderecosComando[enderecoAtual], "cd") == 0) {
             enderecoAtual++;
@@ -153,10 +198,11 @@ int main(int argc, char *argv[]) {
                     wait(NULL);
                 }
             }
-            else if(strcmp(enderecosComando[0],"clear") == 0){
-                        system("clear");
+            else if(strcmp(enderecosComando[enderecoAtual],"clear") == 0){
+                clear_screen();
+                printf("-- Bob shell --\n");
 
-            } else if(strcmp(enderecosComando[0],"exit") == 0){
+            } else if(strcmp(enderecosComando[enderecoAtual],"exit") == 0){
                 printf("\nTerminou o BobShell\n");
                 free(path);
                 return 0;
@@ -181,6 +227,16 @@ int main(int argc, char *argv[]) {
                     printf("%s não é reconhecido como comando interno\n",enderecosComando[enderecoAtual]);
                 }
         }
+
+        if (redirect_output) {
+
+            fflush(stdout);
+            dup2(stdout_backup, fileno(stdout));
+            close(stdout_backup);
+            printf("Redirecionamento concluído!");
+
+        }
+
 
         free(enderecosComando);
         
