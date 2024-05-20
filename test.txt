@@ -1,0 +1,2 @@
+arquivo de saida copiado para arquivo de entrada
+testeeee
