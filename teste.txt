@@ -1,14 +1,2 @@
-.
-..
-.git
-.gitignore
-cat.c
-LICENSE
-ls
-ls.c
-main
-main.c
-main.o
-README.md
-teste
-teste.txt
+arquivo de saida copiado para arquivo de entrada
+testeeee
