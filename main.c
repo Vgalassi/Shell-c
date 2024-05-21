@@ -83,6 +83,7 @@ int main(int argc, char *argv[]) {
     printf("-- Bob shell --\n");
     while (1) {
         int redirect_output = 0;
+        int redirect_input = 0;
 
         if (!redirect_output) {
             printf("\n%s> ", diretorio);
@@ -129,47 +130,38 @@ if (redirect_output) {
     stdin_backup = dup(fileno(stdin));
     stdout_backup = dup(fileno(stdout));
 
-   if (input_file != NULL) {
-    // Verifica se o arquivo de entrada existe
-    if (access(input_file, F_OK) == -1) {
-        fprintf(stderr, "Erro: Arquivo de entrada '%s' não existe\n", enderecosComando[enderecoAtual+1]);
-        dup2(stdin_backup, fileno(stdin));
+    if (redirect_input) {
+                if (access(input_file, F_OK) == -1) {
+                    fprintf(stderr, "Erro: Arquivo de entrada '%s' não existe\n", input_file);
+                    continue;
+                }
+                int input_fd = open(input_file, O_RDONLY);
+                if (input_fd == -1) {
+                    perror("Erro ao abrir arquivo de entrada");
+                    continue;
+                }
+                if (dup2(input_fd, fileno(stdin)) == -1) {
+                    perror("Erro ao redirecionar stdin");
+                    close(input_fd);
+                    continue;
+                }
+                close(input_fd);
+            }
+
+    int output_fd = open(output_file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+    if (output_fd == -1) {
+        perror("ERROR");
+        printf("Não foi possível abrir ou criar o arquivo %s\n", enderecosComando[i+1]);
+        dup2(stdout_backup, fileno(stdout));
+
         continue;
     }
-    
-    int input_fd = open(input_file, O_RDONLY);
-    if (input_fd == -1) {
-        perror("Erro ao abrir arquivo de entrada");
-        dup2(stdin_backup, fileno(stdin));
-        continue;
-    }
-    
-    if (dup2(input_fd, fileno(stdin)) == -1) {
-        perror("Erro ao redirecionar stdin");
-        close(input_fd);
-        continue;
-    }
-    close(input_fd);
-}
-
-
-
-    if (redirect_output) {
-        int output_fd = open(output_file, O_WRONLY);
-        if (output_fd == -1) {
-            perror("ERROR");
-            printf("Não foi possível abrir ou criar o arquivo %s\n", enderecosComando[i+1]);
-            dup2(stdout_backup, fileno(stdout));
-
-            continue;
-        }
-        if (dup2(output_fd, fileno(stdout)) == -1) {
-            perror("Erro ao redirecionar stdout");
-            close(output_fd);
-            continue;
-        }
+    if (dup2(output_fd, fileno(stdout)) == -1) {
+        perror("Erro ao redirecionar stdout");
         close(output_fd);
+        continue;
     }
+    close(output_fd);
 }
 
         if (numeroEnderecos == 0) {
