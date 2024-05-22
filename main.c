@@ -58,7 +58,7 @@ int contaPalavras(char** enderecosComando, int numeroEnderecos) {
 }
 
 int main(int argc, char *argv[]) {
-    
+    FILE *file;
     char comando[8191];
     char diretorio[256];
     char **path;
@@ -80,6 +80,15 @@ int main(int argc, char *argv[]) {
     realpath("./ls", ls_path);
     realpath("./cat", cat_path);
 
+    if(argc != 1){
+        
+        file = fopen(argv[1], "r");
+        if (file == NULL) {
+            printf("Não foi possível abrir o arquivo.\n");
+            return 1;
+        }
+    }
+
     printf("-- Bob shell --\n");
     while (1) {
         int redirect_output = 0;
@@ -88,7 +97,12 @@ int main(int argc, char *argv[]) {
         if (!redirect_output) {
             printf("\n%s> ", diretorio);
         }
-        fgets(comando, 8191, stdin);
+
+        if(file != NULL && fgets(comando, sizeof(comando), file) != NULL){
+            comando[strcspn(comando, "\r")] = 0;
+        }else{
+            fgets(comando, 8191, stdin);
+        }
         comando[strcspn(comando, "\n")] = 0;
         enderecosComando = separarComando(comando, &numeroEnderecos);
         for(i = 0;i<numeroEnderecos;i++){
@@ -238,14 +252,19 @@ if (redirect_output) {
             } else if(strcmp(enderecosComando[enderecoAtual],"exit") == 0){
                 printf("\nTerminou o BobShell\n");
                 free(path);
+                if(file != NULL)
+                    fclose(file);
                 return 0;
-            }else{
+            }else if(strcmp(enderecosComando[enderecoAtual],"") == 0){
+
+            }
+            else{
                 int numeroProcessos = 0;
                 char diretorioProcurado[256];
                 
                 for(i = 0;i<pathTamanho;i++){
                     snprintf(diretorioProcurado, sizeof(diretorioProcurado), "%s/%s", path[i], enderecosComando[enderecoAtual]);
-                    if(access(diretorioProcurado, X_OK) == 0){
+                    if(access(diretorioProcurado, X_OK) == 0 ){
                         pid = fork();
                         if(pid == 0){
                             execl(diretorioProcurado, enderecosComando[enderecoAtual] , NULL, NULL);
@@ -284,6 +303,7 @@ if (redirect_output) {
             wait(NULL);
 
         numeroProcessosPricipal = 0;
+        pidPrincipal = 1;
     }
 
    
