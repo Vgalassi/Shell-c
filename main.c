@@ -43,7 +43,6 @@ char** separarComando(char comando[], int *numeroEnderecos) {
         }
         j++;
     }
-    printf("\n");
     return enderecosComando;
 }
 
@@ -93,6 +92,7 @@ int main(int argc, char *argv[]) {
     printf("-- Bob shell --\n");
     while (1) {
         int redirect_output = 0;
+        int redirect_input = 0;
 
         if (!redirect_output) {
             printf("\n%s> ", diretorio);
@@ -118,32 +118,65 @@ int main(int argc, char *argv[]) {
         numeroPalavras = contaPalavras(&enderecosComando[enderecoAtual], numeroEnderecos - enderecoAtual);
 
         char *output_file = NULL;
-        for (i = 0; i < numeroEnderecos; i++) {
-            if (strcmp(enderecosComando[i], ">") == 0 && i + 1 < numeroEnderecos) {
-                redirect_output = 1;
-                output_file = enderecosComando[i + 1];
-                enderecosComando[i] = NULL; // Termina o comando antes do '>'
-                numeroEnderecos = i; // Ajusta o número de endereços para não incluir o redirecionamento
-                 break;
-            }
-        
-        }
+        // Adicione uma variável para armazenar o nome do arquivo de entrada
+char *input_file = NULL;
 
-        int stdout_backup;
-        if (redirect_output) {
-            stdout_backup = dup(fileno(stdout));
-            int output_fd = open(output_file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-            if (output_fd == -1) {
-                perror("Erro ao abrir o arquivo de saída");
-                continue;
-            }
-            if (dup2(output_fd, fileno(stdout)) == -1) {
-                perror("Erro ao redirecionar stdout");
-                close(output_fd);
-                continue;
-            }
-        }
+for (i = 0; i < numeroEnderecos; i++) {
+    if (strcmp(enderecosComando[i], "<") == 0 && i + 1 < numeroEnderecos) {
+        // Se encontrarmos o operador de redirecionamento de entrada
+        input_file = enderecosComando[i];
+        enderecosComando[i] = NULL; 
+        numeroEnderecos = i; 
+        break;
+    } else if (strcmp(enderecosComando[i], ">") == 0 && i + 1 < numeroEnderecos) {
+        // Se encontrarmos o operador de redirecionamento de saída
+        redirect_output = 1;
+        output_file = enderecosComando[i + 1];
+        enderecosComando[i] = NULL; 
+        numeroEnderecos = i; 
+        break;
+    }
+}
 
+int stdin_backup, stdout_backup;
+
+if (redirect_output) {
+    stdin_backup = dup(fileno(stdin));
+    stdout_backup = dup(fileno(stdout));
+
+    if (redirect_input) {
+                if (access(input_file, F_OK) == -1) {
+                    fprintf(stderr, "Erro: Arquivo de entrada '%s' não existe\n", input_file);
+                    continue;
+                }
+                int input_fd = open(input_file, O_RDONLY);
+                if (input_fd == -1) {
+                    perror("Erro ao abrir arquivo de entrada");
+                    continue;
+                }
+                if (dup2(input_fd, fileno(stdin)) == -1) {
+                    perror("Erro ao redirecionar stdin");
+                    close(input_fd);
+                    continue;
+                }
+                close(input_fd);
+            }
+
+    int output_fd = open(output_file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+    if (output_fd == -1) {
+        perror("ERROR");
+        printf("Não foi possível abrir ou criar o arquivo %s\n", enderecosComando[i+1]);
+        dup2(stdout_backup, fileno(stdout));
+
+        continue;
+    }
+    if (dup2(output_fd, fileno(stdout)) == -1) {
+        perror("Erro ao redirecionar stdout");
+        close(output_fd);
+        continue;
+    }
+    close(output_fd);
+}
 
         if (numeroEnderecos == 0) {
             continue;  
@@ -252,7 +285,7 @@ int main(int argc, char *argv[]) {
             fflush(stdout);
             dup2(stdout_backup, fileno(stdout));
             close(stdout_backup);
-            printf("Redirecionamento concluído!");
+            printf("Redirecionamento concluído!\n");
 
         }
 
