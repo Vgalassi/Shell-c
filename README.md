@@ -3,7 +3,7 @@
 Este repositório contém o código fonte para um interpretador de comandos em linguagem C, também conhecido como shell. O shell é capaz de receber comandos interativamente via terminal ou de um arquivo batch, interpretar cada comando e decidir entre comandos internos (built-in) ou programas externos, executando-os em novos processos filhos.
 
 ## Objetivo 
-Desenvolver uma aplicação Shell - interpretador de comandos em C.
+Desenvolver uma aplicação Shell - interpretador de comandos em <img src="https://cdn.iconscout.com/icon/free/png-256/free-c-58-1175247.png" alt="C Logo" width="25"> 
 
 ## Pré-requisitos
 1. Ter o **GIT** instalado <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Git_icon.svg/2048px-Git_icon.svg.png" alt="Git Logo" width="22"> 
