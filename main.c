@@ -120,6 +120,10 @@ int main(int argc, char *argv[]) {
 
         if(file != NULL && fgets(comando, sizeof(comando), file) != NULL){
             comando[strcspn(comando, "\r")] = 0;
+            if (file == NULL && feof(file) ) {
+            printf("\n%s> ", diretorio);
+            }
+            printf("Comando %s executado!\n", comando);
         }else{
             fgets(comando, 8191, stdin);
         }

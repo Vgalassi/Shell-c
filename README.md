@@ -97,9 +97,9 @@ docker run -it -v .:/Shell-c ubuntu22-gcc
 gcc -c main.c
 gcc -o main main.o
 ```
-2. Execute o código com a adição do arquivo batch configurado - exemplo:
+2. Terá um arquivo escrito `arquivo.batch`. Execute o código com a adição do arquivo batch configurado:
 ```
-./main meu_arquivo.batch
+./main arquivo.batch
 ```
 
 ## Observações 
