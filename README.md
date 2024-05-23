@@ -10,7 +10,7 @@ Desenvolver uma aplicação Shell - interpretador de comandos em <img src="https
 
    - Link para download -> https://git-scm.com/downloads
 
-2. Ter o **VS Code** instalado (ou um compilador de sua preferência) <img src="https://cdn.iconscout.com/icon/free/png-256/free-visual-studio-code-3251603-2724650.png?f=webp" alt="VsCODE Logo" width="26"> 
+2. Ter o **VS Code** instalado (ou um editor de sua preferência) <img src="https://cdn.iconscout.com/icon/free/png-256/free-visual-studio-code-3251603-2724650.png?f=webp" alt="VsCODE Logo" width="26"> 
 
    - Link para download -> https://code.visualstudio.com/download
   
