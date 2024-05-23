@@ -7,11 +7,11 @@ Desenvolver uma aplicação Shell - interpretador de comandos em C.
 
 ## Pré-requisitos
 1. Ter o git instalado
-   - [Link para download](https://git-scm.com/downloads)
+   - [Download](https://git-scm.com/downloads)
 2. Ter a VM VirtualBox instalada
-   - [Link para download](https://www.virtualbox.org/wiki/Downloads)
+   - [Download](https://www.virtualbox.org/wiki/Downloads)
 3. Ter o VS Code instalado (ou um compilador de sua preferência)
-   - [Link para download](https://code.visualstudio.com/download)
+   - [Download](https://code.visualstudio.com/download)
 
 ## Passos para configuração na VM VirtualBox
 1. Clonando o repositório:
