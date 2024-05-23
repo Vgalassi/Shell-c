@@ -107,9 +107,7 @@ gcc -o main main.o
 - Não é preciso se preocupar com caracteres de escape ou argumentos com espaços entre aspas.
 
 ## Ferramentas utilizadas 
-<img src="https://cdn.iconscout.com/icon/free/png-256/free-c-58-1175247.png" alt="C Logo" width="26">
-<img src="https://cdn.iconscout.com/icon/free/png-256/free-visual-studio-code-3251603-2724650.png?f=webp" alt="VsCODE Logo" width="26"> 
-<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Git_icon.svg/2048px-Git_icon.svg.png" alt="Git Logo" width="26"> 
+<img src="https://cdn.iconscout.com/icon/free/png-256/free-c-58-1175247.png" alt="C Logo" width="26"> <img src="https://cdn.iconscout.com/icon/free/png-256/free-visual-studio-code-3251603-2724650.png?f=webp" alt="VsCODE Logo" width="26"> <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Git_icon.svg/2048px-Git_icon.svg.png" alt="Git Logo" width="26"> 
 
 <img src="https://wiki.hornbill.com/images/7/70/Docker_logo.png" alt="Docker Logo" width="26"> ou <img src="https://upload.wikimedia.org/wikipedia/commons/d/d5/Virtualbox_logo.png" alt="VM Logo" width="26"> 
 
