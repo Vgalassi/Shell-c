@@ -5,8 +5,7 @@
 #include <dirent.h>
 #include <fcntl.h>
 #include <wait.h>
-
-
+#include <ctype.h>
 
 void clear_screen() {
     #ifdef _WIN32
@@ -43,7 +42,6 @@ char** separarComando(char comando[], int *numeroEnderecos) {
         }
         j++;
     }
-    printf("\n");
     return enderecosComando;
 }
 
@@ -58,8 +56,14 @@ int contaPalavras(char** enderecosComando, int numeroEnderecos) {
     return numeroPalavras;
 }
 
+void to_lowercase(char *str) {
+    for (; *str; str++) {
+        *str = tolower(*str);
+    }
+}
+
 int main(int argc, char *argv[]) {
-    
+    FILE *file;
     char comando[8191];
     char diretorio[256];
     char **path;
@@ -81,15 +85,37 @@ int main(int argc, char *argv[]) {
     realpath("./ls", ls_path);
     realpath("./cat", cat_path);
 
+    if(argc != 1){
+        
+        file = fopen(argv[1], "r");
+        if (file == NULL) {
+            printf("Não foi possível abrir o arquivo.\n");
+            return 1;
+        }
+    }
+
     printf("-- Bob shell --\n");
     while (1) {
         int redirect_output = 0;
+        int redirect_input = 0;
 
         if (!redirect_output) {
             printf("\n%s> ", diretorio);
         }
-        fgets(comando, 8191, stdin);
+
+        if(file != NULL && fgets(comando, sizeof(comando), file) != NULL){
+            comando[strcspn(comando, "\r")] = 0;
+            if (file == NULL && feof(file) ) {
+            printf("\n%s> ", diretorio);
+            }
+            printf("Comando %s executado!\n", comando);
+        }else{
+            fgets(comando, 8191, stdin);
+        }
+
         comando[strcspn(comando, "\n")] = 0;
+        to_lowercase(comando);
+
         enderecosComando = separarComando(comando, &numeroEnderecos);
         for(i = 0;i<numeroEnderecos;i++){
             if(strcmp(enderecosComando[i], "&") == 0 && pidPrincipal != 0){
@@ -104,32 +130,67 @@ int main(int argc, char *argv[]) {
         numeroPalavras = contaPalavras(&enderecosComando[enderecoAtual], numeroEnderecos - enderecoAtual);
 
         char *output_file = NULL;
-        for (i = 0; i < numeroEnderecos; i++) {
-            if (strcmp(enderecosComando[i], ">") == 0 && i + 1 < numeroEnderecos) {
-                redirect_output = 1;
-                output_file = enderecosComando[i + 1];
-                enderecosComando[i] = NULL; // Termina o comando antes do '>'
-                numeroEnderecos = i; // Ajusta o número de endereços para não incluir o redirecionamento
-                 break;
-            }
-        
-        }
+        // Adicione uma variável para armazenar o nome do arquivo de entrada
+char *input_file = NULL;
 
-        int stdout_backup;
-        if (redirect_output) {
-            stdout_backup = dup(fileno(stdout));
-            int output_fd = open(output_file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-            if (output_fd == -1) {
-                perror("Erro ao abrir o arquivo de saída");
-                continue;
-            }
-            if (dup2(output_fd, fileno(stdout)) == -1) {
-                perror("Erro ao redirecionar stdout");
-                close(output_fd);
-                continue;
-            }
-        }
+for (i = 0; i < numeroEnderecos; i++) {
+    if (strcmp(enderecosComando[i], "<") == 0 && i + 1 < numeroEnderecos) {
+        // Se encontrarmos o operador de redirecionamento de entrada
+        input_file = enderecosComando[i];
+        enderecosComando[i] = NULL; 
+        numeroEnderecos = i; 
+        break;
+    } else if (strcmp(enderecosComando[i], ">") == 0 && i + 1 < numeroEnderecos) {
+        // Se encontrarmos o operador de redirecionamento de saída
+        redirect_output = 1;
+        output_file = enderecosComando[i + 1];
+        enderecosComando[i] = NULL; 
+        numeroEnderecos = i; 
+        break;
+    }
+}
 
+int stdin_backup, stdout_backup;
+
+if (redirect_output) {
+
+    
+    stdin_backup = dup(fileno(stdin));
+    stdout_backup = dup(fileno(stdout));
+
+    if (redirect_input) {
+                if (access(input_file, F_OK) == -1) {
+                    fprintf(stderr, "Erro: Arquivo de entrada '%s' não existe\n", input_file);
+                    continue;
+                }
+                int input_fd = open(input_file, O_RDONLY);
+                if (input_fd == -1) {
+                    perror("Erro ao abrir arquivo de entrada");
+                    continue;
+                }
+                if (dup2(input_fd, fileno(stdin)) == -1) {
+                    perror("Erro ao redirecionar stdin");
+                    close(input_fd);
+                    continue;
+                }
+                close(input_fd);
+            }
+
+    int output_fd = open(output_file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+    if (output_fd == -1) {
+        perror("ERROR");
+        printf("Não foi possível abrir ou criar o arquivo %s\n", enderecosComando[i+1]);
+        dup2(stdout_backup, fileno(stdout));
+
+        continue;
+    }
+    if (dup2(output_fd, fileno(stdout)) == -1) {
+        perror("Erro ao redirecionar stdout");
+        close(output_fd);
+        continue;
+    }
+    close(output_fd);
+}
 
         if (numeroEnderecos == 0) {
             continue;  
@@ -205,14 +266,19 @@ int main(int argc, char *argv[]) {
             } else if(strcmp(enderecosComando[enderecoAtual],"exit") == 0){
                 printf("\nTerminou o BobShell\n");
                 free(path);
+                if(file != NULL)
+                    fclose(file);
                 return 0;
-            }else{
+            }else if(strcmp(enderecosComando[enderecoAtual],"") == 0){
+
+            }
+            else{
                 int numeroProcessos = 0;
                 char diretorioProcurado[256];
                 
                 for(i = 0;i<pathTamanho;i++){
                     snprintf(diretorioProcurado, sizeof(diretorioProcurado), "%s/%s", path[i], enderecosComando[enderecoAtual]);
-                    if(access(diretorioProcurado, X_OK) == 0){
+                    if(access(diretorioProcurado, X_OK) == 0 ){
                         pid = fork();
                         if(pid == 0){
                             execl(diretorioProcurado, enderecosComando[enderecoAtual] , NULL, NULL);
@@ -233,13 +299,12 @@ int main(int argc, char *argv[]) {
             fflush(stdout);
             dup2(stdout_backup, fileno(stdout));
             close(stdout_backup);
-            printf("Redirecionamento concluído!");
+            printf("Redirecionamento concluído!\n");
 
         }
 
 
         free(enderecosComando);
-        
         
         numeroPalavras = 0;
         enderecoAtual = 0;
@@ -251,6 +316,7 @@ int main(int argc, char *argv[]) {
             wait(NULL);
 
         numeroProcessosPricipal = 0;
+        pidPrincipal = 1;
     }
 
    
