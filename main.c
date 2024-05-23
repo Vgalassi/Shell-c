@@ -5,8 +5,7 @@
 #include <dirent.h>
 #include <fcntl.h>
 #include <wait.h>
-
-
+#include <ctype.h>
 
 void clear_screen() {
     #ifdef _WIN32
@@ -55,6 +54,12 @@ int contaPalavras(char** enderecosComando, int numeroEnderecos) {
     }
     numeroPalavras = i;
     return numeroPalavras;
+}
+
+void to_lowercase(char *str) {
+    for (; *str; str++) {
+        *str = tolower(*str);
+    }
 }
 
 int main(int argc, char *argv[]) {
@@ -109,6 +114,8 @@ int main(int argc, char *argv[]) {
         }
 
         comando[strcspn(comando, "\n")] = 0;
+        to_lowercase(comando);
+
         enderecosComando = separarComando(comando, &numeroEnderecos);
         for(i = 0;i<numeroEnderecos;i++){
             if(strcmp(enderecosComando[i], "&") == 0 && pidPrincipal != 0){
@@ -146,6 +153,8 @@ for (i = 0; i < numeroEnderecos; i++) {
 int stdin_backup, stdout_backup;
 
 if (redirect_output) {
+
+    
     stdin_backup = dup(fileno(stdin));
     stdout_backup = dup(fileno(stdout));
 
