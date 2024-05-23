@@ -1,0 +1,14 @@
+
+cat
+cat.c
+dockerfile
+LICENSE
+ls
+ls.c
+main
+main.c
+main.o
+README.md
+test1.txt
+teste
+teste.txt
