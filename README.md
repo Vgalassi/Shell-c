@@ -51,7 +51,7 @@ sudo mount -t vboxsf labs labs/
   ./main
   ```
 
-## Passos para configuração no Docker (Opcional)
+## Passos para configuração no Docker
 1. Siga o passo 1 da configuração na VM VirtualBox
 2. No terminal do VS Code (ou em outra plataforma que desejar), acesse o diretório em que o projeto e execute os comandos `COM O DOCKER ABERTO`:
 ```
@@ -101,12 +101,11 @@ gcc -o main main.o
 ./main meu_arquivo.batch
 ```
 
-
 ## Observações 
 - Os argumentos de comandos são separados por espaços (um ou mais).
 - Não é preciso se preocupar com caracteres de escape ou argumentos com espaços entre aspas.
 
-## Contribuição:
+## Contribuição
 Sinta-se à vontade para contribuir com este projeto. Para isso, siga os passos abaixo:
 
 1. Faça um fork do repositório.
@@ -115,5 +114,5 @@ Sinta-se à vontade para contribuir com este projeto. Para isso, siga os passos 
 4. Faça push para a branch (git push origin feature/nova-feature).
 5. Abra um Pull Request.
 
-## Licença:
+## Licença
 - Este projeto está licenciado sob a MIT License.
