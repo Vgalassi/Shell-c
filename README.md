@@ -1,4 +1,4 @@
-# Shell - Interpretador de Comandos <img src="https://runcode-app-public.s3.amazonaws.com/images/bash-shell-script-online-editor-compiler.original.png" alt="Git Logo" width="30">
+# Shell - Interpretador de Comandos <img src="https://runcode-app-public.s3.amazonaws.com/images/bash-shell-script-online-editor-compiler.original.png" alt="Shell Logo" width="30">
 
 Este repositório contém o código fonte para um interpretador de comandos em linguagem C, também conhecido como shell. O shell é capaz de receber comandos interativamente via terminal ou de um arquivo batch, interpretar cada comando e decidir entre comandos internos (built-in) ou programas externos, executando-os em novos processos filhos.
 
