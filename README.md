@@ -1,17 +1,28 @@
-# Shell - Interpretador de Comandos
+# Shell - Interpretador de Comandos <img src="https://runcode-app-public.s3.amazonaws.com/images/bash-shell-script-online-editor-compiler.original.png" alt="Git Logo" width="30">
 
 Este repositório contém o código fonte para um interpretador de comandos em linguagem C, também conhecido como shell. O shell é capaz de receber comandos interativamente via terminal ou de um arquivo batch, interpretar cada comando e decidir entre comandos internos (built-in) ou programas externos, executando-os em novos processos filhos.
 
-## Objetivo
+## Objetivo 
 Desenvolver uma aplicação Shell - interpretador de comandos em C.
 
 ## Pré-requisitos
-1. Ter o git instalado
-   - [Download](https://git-scm.com/downloads)
-2. Ter a VM VirtualBox instalada
-   - [Download](https://www.virtualbox.org/wiki/Downloads)
-3. Ter o VS Code instalado (ou um compilador de sua preferência)
-   - [Download](https://code.visualstudio.com/download)
+1. Ter o **GIT** instalado <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Git_icon.svg/2048px-Git_icon.svg.png" alt="Git Logo" width="22"> 
+
+   - Link para download -> https://git-scm.com/downloads
+
+2. Ter o **VS Code** instalado (ou um compilador de sua preferência) <img src="https://cdn.iconscout.com/icon/free/png-256/free-visual-studio-code-3251603-2724650.png?f=webp" alt="VsCODE Logo" width="26"> 
+
+   - Link para download -> https://code.visualstudio.com/download
+  
+### Pode ser executado na VM VirtualBox ou no Docker
+
+3. Ter a **VM VirtualBox** instalada <img src="https://upload.wikimedia.org/wikipedia/commons/d/d5/Virtualbox_logo.png" alt="VM Logo" width="25"> 
+
+   - Link para download -> https://www.virtualbox.org/wiki/Downloads
+
+4. Ter o **Docker** instalado <img src="https://wiki.hornbill.com/images/7/70/Docker_logo.png" alt="Docker Logo" width="25"> 
+
+   - Link para download -> https://docs.docker.com/get-docker/
 
 ## Passos para configuração na VM VirtualBox
 1. Clonando o repositório:
