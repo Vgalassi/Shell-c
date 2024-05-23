@@ -87,6 +87,7 @@ docker run -it -v .:/Shell-c ubuntu22-gcc
   - `-a` -> Informa os arquivos ocultos dentro de um repositório.
 3. **Redirecionamento de saída**: A saída dos comandos pode ser redirecionada para um arquivo utilizando o comando `>`.
 4. **Comandos em paralelo**: Vários comandos separados por `&` são executados de forma concorrente, em processos separados.
+5. **Comando clear**: Limpa a tela do shell, facilitando a visualização do prompt
 
 ## Funcionamento do arquivo batch
 - Um arquivo batch é um script de texto simples que contém uma série de comandos a serem executados pelo interpretador - Shell.
@@ -105,6 +106,13 @@ gcc -o main main.o
 - Os argumentos de comandos são separados por espaços (um ou mais).
 - Não é preciso se preocupar com caracteres de escape ou argumentos com espaços entre aspas.
 
+## Ferramentas utilizadas 
+<img src="https://cdn.iconscout.com/icon/free/png-256/free-c-58-1175247.png" alt="C Logo" width="26">
+<img src="https://cdn.iconscout.com/icon/free/png-256/free-visual-studio-code-3251603-2724650.png?f=webp" alt="VsCODE Logo" width="26"> 
+<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Git_icon.svg/2048px-Git_icon.svg.png" alt="Git Logo" width="26"> 
+
+<img src="https://wiki.hornbill.com/images/7/70/Docker_logo.png" alt="Docker Logo" width="26"> ou <img src="https://upload.wikimedia.org/wikipedia/commons/d/d5/Virtualbox_logo.png" alt="VM Logo" width="26"> 
+
 ## Contribuição
 Sinta-se à vontade para contribuir com este projeto. Para isso, siga os passos abaixo:
 
@@ -113,6 +121,12 @@ Sinta-se à vontade para contribuir com este projeto. Para isso, siga os passos 
 3. Faça commit das suas alterações (git commit -am 'Adiciona nova feature').
 4. Faça push para a branch (git push origin feature/nova-feature).
 5. Abra um Pull Request.
+
+## Desenvolvedores <img src="https://bitperfect.at/assets/blog-images/Headerbild-Was-ist-GitHub-v2.png" alt="Github Logo" width="30"> 
+
+- Augusto Morato: [Github](https://github.com/Guto06)
+- Matheus Anitelli: [Github](https://github.com/mttue7)
+- Vinicius Galassi: [Github](https://github.com/Vgalassi)
 
 ## Licença
 - Este projeto está licenciado sob a MIT License.
