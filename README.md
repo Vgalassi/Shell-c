@@ -33,7 +33,7 @@ Desenvolver uma aplicação Shell - interpretador de comandos em C.
 ```
 ssh <usuário>@127.0.0.1 -p2222
 ```
-3. Utilize o comando para criar uma nova pasta chamada “labs” no diretório de usuário
+3. Utilize os comandos para criar uma nova pasta chamada “labs” no diretório de usuário
 ```
 mkdir labs
 sudo mount -t vboxsf labs labs/
