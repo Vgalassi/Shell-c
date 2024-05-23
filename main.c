@@ -100,9 +100,14 @@ int main(int argc, char *argv[]) {
 
         if(file != NULL && fgets(comando, sizeof(comando), file) != NULL){
             comando[strcspn(comando, "\r")] = 0;
+            if (file == NULL && feof(file) ) {
+            printf("\n%s> ", diretorio);
+            }
+            printf("Comando %s executado!\n", comando);
         }else{
             fgets(comando, 8191, stdin);
         }
+
         comando[strcspn(comando, "\n")] = 0;
         enderecosComando = separarComando(comando, &numeroEnderecos);
         for(i = 0;i<numeroEnderecos;i++){
@@ -291,7 +296,6 @@ if (redirect_output) {
 
 
         free(enderecosComando);
-        
         
         numeroPalavras = 0;
         enderecoAtual = 0;

@@ -1,4 +1,0 @@
-
-novo.txt
-teste.txt
-teste2

@@ -1,1 +1,1 @@
-Não foi possível abrir o arquivo novo.txt
+poison.txt não é reconhecido como comando interno
