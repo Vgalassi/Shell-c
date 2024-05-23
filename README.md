@@ -90,7 +90,7 @@ docker run -it -v .:/Shell-c ubuntu22-gcc
 
 ## Funcionamento do arquivo batch
 - Um arquivo batch é um script de texto simples que contém uma série de comandos a serem executados pelo interpretador - Shell.
-#### Passos para funcionamento de um arquivo shell
+#### Passos para funcionamento de um arquivo batch
 1. Compile o código com o comando
 ```
 gcc -c main.c
