@@ -1,1 +1,1 @@
-Não foi possível abrir o arquivo blabs.txt
+poison.txt não é reconhecido como comando interno
