@@ -1,1 +1,0 @@
-poison.txt não é reconhecido como comando interno
