@@ -75,7 +75,7 @@ int VerificaBuilt(char* comando){
 
 
 int main(int argc, char *argv[]) {
-    FILE *file;
+    FILE *file = NULL;
     char comando[8191];
     char diretorio[256];
     char **path;
